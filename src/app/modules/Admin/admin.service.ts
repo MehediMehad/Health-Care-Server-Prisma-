@@ -1,15 +1,12 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { equal } from "assert";
 
 const prisma = new PrismaClient();
 
 const getAllFromDB = async (params: any) => {
   const {searchTerm, ...filterData} = params
-  console.log(Object.keys(filterData).length);
   
-
   const andCondition: Prisma.AdminWhereInput[] = [];
-  const adminSearchAbleFields = ["name", "email"]
+  const adminSearchAbleFields = ['name', 'email']
 
   if (params.searchTerm) {
     andCondition.push({
@@ -31,7 +28,7 @@ const getAllFromDB = async (params: any) => {
       }))
     })
   }
-  console.dir(andCondition, { depth: "infinity" });
+
   const whereCondition: Prisma.AdminWhereInput = { AND: andCondition };
 
   const result = await prisma.admin.findMany({

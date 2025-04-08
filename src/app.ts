@@ -1,7 +1,8 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { userRoute } from "./app/modules/User/user.routes";
+import { UserRoutes } from "./app/modules/User/user.routes";
+import { AdminRoutes } from "./app/modules/Admin/admin.routes";
 
 const app: Application = express();
 
@@ -21,5 +22,6 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/v1/user", userRoute);
+app.use("/api/v1/user", UserRoutes);
+app.use("/api/v1/admin", AdminRoutes);
 export default app;

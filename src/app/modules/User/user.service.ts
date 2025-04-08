@@ -28,6 +28,6 @@ const createAdmin = async (data: any) => {
   return result;
 };
 
-export const userServices = {
+export const UserService = {
   createAdmin,
 };

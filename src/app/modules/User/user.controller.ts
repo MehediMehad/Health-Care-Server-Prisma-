@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { userServices } from "./user.sevice";
+import { UserService } from "./user.service";
 
 const createAdmin  = async (req: Request, res:Response) => {
     
-    const result = await userServices.createAdmin(req.body)
+    const result = await UserService.createAdmin(req.body)
     res.send(result)
 }
 
 
-export const userControllers = {
+export const UserController = {
     createAdmin
 }

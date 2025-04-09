@@ -1,12 +1,11 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { adminSearchAbleFields } from "./admin.constant";
 
 const prisma = new PrismaClient();
 
 const getAllFromDB = async (params: any) => {
   const {searchTerm, ...filterData} = params
-  
   const andCondition: Prisma.AdminWhereInput[] = [];
-  const adminSearchAbleFields = ['name', 'email']
 
   if (params.searchTerm) {
     andCondition.push({

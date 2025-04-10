@@ -89,7 +89,12 @@ const updateIntoDB = async (id: string, data: Partial<Admin>) => {
 }
 
 const deleteFromDB = async (id:string) => {
-
+  await prisma.admin.findUniqueOrThrow({
+    where: {
+      id
+    }
+  })
+  
   const result = prisma.$transaction(async(transactionClient)=> {
 
     const adminDeletedData = await transactionClient.admin.delete({

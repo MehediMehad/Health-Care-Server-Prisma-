@@ -27,9 +27,7 @@ const getByIdFromDB = async (req: Request, res: Response) => {
   const {id} = req.params
 
   try{
-    const result = await AdminService.getByIdFromDB(id)
-    console.log(result);
-    
+    const result = await AdminService.getByIdFromDB(id)    
     res.status(200).json({
       success: true,
       message: "Admin data fetched by id",
@@ -45,7 +43,29 @@ const getByIdFromDB = async (req: Request, res: Response) => {
 
 }
 
+const updateIntoDB = async (req: Request, res:Response) => {
+  const {id} = req.params
+  
+
+  try{
+    const result = await AdminService.updateIntoDB(id, req.body)    
+    res.status(200).json({
+      success: true,
+      message: "Admin data updated!",
+      data: result
+    })
+  }catch (error: any){
+    res.status(200).json({
+      success: false,
+      message: error?.name || "Something went wrong",
+      error: error
+    })
+  }
+  
+}
+
 export const AdminController = {
   getAllFromDB,
-  getByIdFromDB
+  getByIdFromDB,
+  updateIntoDB
 };

@@ -11,17 +11,41 @@ const getAllFromDB = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Admin data fetched",
-      data: result,
+      meta: result.meta,
+      data: result.data,
     });
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: error.name || "Southing went wrong",
+      message: error?.name || "Southing went wrong",
       error: error,
     });
   }
 };
 
+const getByIdFromDB = async (req: Request, res: Response) => {
+  const {id} = req.params
+
+  try{
+    const result = await AdminService.getByIdFromDB(id)
+    console.log(result);
+    
+    res.status(200).json({
+      success: true,
+      message: "Admin data fetched by id",
+      data: result
+    })
+  }catch (error: any){
+    res.status(200).json({
+      success: false,
+      message: error?.name || "Something went wrong",
+      error: error
+    })
+  }
+
+}
+
 export const AdminController = {
   getAllFromDB,
+  getByIdFromDB
 };

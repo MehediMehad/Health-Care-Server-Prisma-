@@ -4,7 +4,6 @@ import * as bcrypt from "bcrypt";
 
 
 const createAdmin = async (data: any) => {
-
   const hashPassword: string = await bcrypt.hash(data.password, 12);
   
   const userData = {

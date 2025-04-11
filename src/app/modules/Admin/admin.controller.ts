@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AdminService } from "./admin.service";
 import pick from "../../../shared/pick";
 import { adminFilterPikedFields } from "./admin.constant";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 
-const getAllFromDB = async (req: Request, res: Response) => {
+const getAllFromDB = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const filters = pick(req.query, adminFilterPikedFields);
     const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
@@ -24,15 +24,11 @@ const getAllFromDB = async (req: Request, res: Response) => {
       data: result.data,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error?.name || "Southing went wrong",
-      error: error,
-    });
+    next()
   }
 };
 
-const getByIdFromDB = async (req: Request, res: Response) => {
+const getByIdFromDB = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
@@ -44,15 +40,11 @@ const getByIdFromDB = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(200).json({
-      success: false,
-      message: error?.name || "Something went wrong",
-      error: error,
-    });
+    next(error)
   }
 };
 
-const updateIntoDB = async (req: Request, res: Response) => {
+const updateIntoDB = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
@@ -64,15 +56,11 @@ const updateIntoDB = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(200).json({
-      success: false,
-      message: error?.name || "Something went wrong",
-      error: error,
-    });
+    next(error)
   }
 };
 
-const deleteFromDB = async (req: Request, res: Response) => {
+const deleteFromDB = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
@@ -85,15 +73,11 @@ const deleteFromDB = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(200).json({
-      success: false,
-      message: error?.name || "Something went wrong",
-      error: error,
-    });
+    next(error)
   }
 };
 
-const softDeleteFromDB = async (req: Request, res: Response) => {
+const softDeleteFromDB = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
@@ -106,11 +90,7 @@ const softDeleteFromDB = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(200).json({
-      success: false,
-      message: error?.name || "Something went wrong",
-      error: error,
-    });
+    next(error)
   }
 };
 

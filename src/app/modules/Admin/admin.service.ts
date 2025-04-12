@@ -2,8 +2,10 @@ import prisma from "../../../shared/prisma";
 import { Admin, Prisma } from "@prisma/client";
 import { adminSearchAbleFields } from "./admin.constant";
 import { paginationHelper } from "../../../helpers/paginationHelper";
+import { TAdminFilterRequest } from "./admin.type";
 
-const getAllFromDB = async (params: any, options: any) => {
+const getAllFromDB = async (params: TAdminFilterRequest, options: any) => {
+  console.log(25, options);
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelper.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
@@ -23,7 +25,7 @@ const getAllFromDB = async (params: any, options: any) => {
     andCondition.push({
       AND: Object.keys(filterData).map((key) => ({
         [key]: {
-          equals: filterData[key], //
+          equals: (filterData as any)[key],
           mode: "insensitive",
         },
       })),

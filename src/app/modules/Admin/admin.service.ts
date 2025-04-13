@@ -2,7 +2,7 @@ import prisma from "../../../shared/prisma";
 import { Admin, Prisma } from "@prisma/client";
 import { adminSearchAbleFields } from "./admin.constant";
 import { paginationHelper } from "../../../helpers/paginationHelper";
-import { TAdminFilterRequest } from "./admin.type";
+import { TAdminFilterRequest } from "./admin.interface";
 
 const getAllFromDB = async (params: TAdminFilterRequest, options: any) => {
   console.log(25, options);

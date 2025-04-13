@@ -1,0 +1,29 @@
+semesterRegistration.interface.ts
+semesterRegistration.model.ts
+semesterRegistration.validation.ts
+semesterRegistration.service.ts
+semesterRegistration.controller.ts
+semesterRegistration.route.ts
+
+mkdir src/app/modules/semesterRegistration
+ 
+touch src/app/modules/Auth/auth.interface.ts
+touch src/app/modules/Auth/auth.validation.ts
+touch src/app/modules/Auth/auth.service.ts
+touch src/app/modules/Auth/auth.controller.ts
+touch src/app/modules/Auth/auth.route.ts
+
+
+
+touch auth.interface.ts
+touch auth.validation.ts
+touch auth.service.ts
+touch auth.controller.ts
+touch auth.route.ts
+
+
+
+process.cwd() //C:\Next-Level\University-Management-Server
+
+
+require("crypto").randomBytes(64).toString('hex')

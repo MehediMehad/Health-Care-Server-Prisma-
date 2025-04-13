@@ -8,10 +8,10 @@ export const validateRequest =
       await schema.parseAsync({
         body: req.body,
       });
-      console.log("checker middleware...☑️");
+      console.log("☑️ validateRequest middleware...");
       return next();
     } catch (err) {
-      console.log("checker middleware...🟥");
+      console.log("🟥 validateRequest middleware...");
       next(err);
     }
   };

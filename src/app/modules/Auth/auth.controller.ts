@@ -7,8 +7,8 @@ import { AuthService } from "./auth.service";
 const loginUser = catchAsync(async (req: Request, res:Response) => {
 
     const result = await AuthService.loginUser(req.body)    
-    const {refreshTokens} = result
-    res.cookie('refreshTokens', refreshTokens, {
+    const {refreshToken} = result
+    res.cookie('refreshToken', refreshToken, {
         secure: true,
         httpOnly: true
     })
@@ -18,13 +18,34 @@ const loginUser = catchAsync(async (req: Request, res:Response) => {
         success: true,
         message: "Logged successfully",
         data: {
-            accessTokens: result.accessTokens,
+            accessToken: result.accessToken,
             needPasswordChange: result.needPasswordChange
         }
     })
 })
 
+const refreshToken = catchAsync(async (req: Request, res:Response) => {    
+    const {refreshToken} = req.cookies
+
+    const result = await AuthService.refreshToken(refreshToken)    
+
+
+    sendResponse(res, {
+        statusCode: httpsCode.OK,
+        success: true,
+        message: "Logged successfully",
+        data: result
+        // data: {
+        //     accessTokens: result.accessTokens,
+        //     needPasswordChange: result.needPasswordChange
+        // }
+    })
+})
+
+
+
 
 export const AuthController = {
-    loginUser
+    loginUser,
+    refreshToken
 }

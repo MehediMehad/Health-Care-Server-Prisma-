@@ -23,17 +23,23 @@ const loginUser = async (payload: { email: string; password: string }) => {
     role: userData.role
   }
 
-  const accessTokens = jwtHelpers.generateToken(data, "sgdhsadhsaj", '5m')
+  const accessToken = jwtHelpers.generateToken(data, "sgdhsadhsaj", '5m') // sort time
 
-  const refreshTokens = jwtHelpers.generateToken(data, 'sahsahsahd', '30d')
+  const refreshToken = jwtHelpers.generateToken(data, 'sahsahsahd', '30d') // long time
 
   return {
     needPasswordChange: userData.needPasswordChange,
-    accessTokens,
-    refreshTokens
+    accessToken,
+    refreshToken
   };
 };
 
+const refreshToken = async (token: string) => {
+    console.log("ress", token);
+    
+}
+
 export const AuthService = {
   loginUser,
+  refreshToken
 };

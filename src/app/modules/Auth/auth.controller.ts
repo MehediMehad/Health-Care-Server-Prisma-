@@ -5,7 +5,7 @@ import httpsCode from 'http-status'
 import { AuthService } from "./auth.service";
 
 const loginUser = catchAsync(async (req: Request, res:Response) => {
-    const result = await AuthService.loginUser()    
+    const result = await AuthService.loginUser(req.body)    
 
     sendResponse(res, {
         statusCode: httpsCode.OK,

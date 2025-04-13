@@ -1,12 +1,14 @@
+import { UserStatus } from "@prisma/client";
 import { jwtHelpers } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
+      status: UserStatus.ACTIVE
     },
   });
 
@@ -38,7 +40,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
 const refreshToken = async (token: string) => {
     let decodedData;
  try {
-    decodedData = jwt.verify(token, "sahsahsahd") // refreshToken secret
+    decodedData = jwtHelpers.verifyToken(token, "sahsahsahd")// refreshToken secret
     
     console.log(52, decodedData);
  } catch (err) {
@@ -47,7 +49,8 @@ const refreshToken = async (token: string) => {
 
  const userData = await prisma.user.findUniqueOrThrow({
     where: {
-        email: decodedData?.email
+        email: decodedData?.email,
+        status: UserStatus.ACTIVE
     }
  })
 

@@ -37,7 +37,6 @@ const loginUser = async (payload: { email: string; password: string }) => {
     config.jwt.refresh_token_secret as string,
     config.jwt.refresh_token_expires_in as string
   ); // "30d"
-  
 
   return {
     needPasswordChange: userData.needPasswordChange,
@@ -49,9 +48,11 @@ const loginUser = async (payload: { email: string; password: string }) => {
 const refreshToken = async (token: string) => {
   let decodedData;
   try {
-    decodedData = jwtHelpers.verifyToken(token, "sahsahsahd"); // refreshToken secret
+    decodedData = jwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_token_secret as string
+    ); // refreshToken secret
 
-    console.log(52, decodedData);
   } catch (err) {
     throw new Error("You are not authorized!");
   }
@@ -68,7 +69,11 @@ const refreshToken = async (token: string) => {
     role: userData.role,
   };
 
-  const accessToken = jwtHelpers.generateToken(data, "sgdhsadhsaj", "5m"); // sort time
+  const accessToken = jwtHelpers.generateToken(
+    data,
+    config.jwt.jwt_secret as string,
+    config.jwt.expires_in as string
+  ); // sort time
 
   return {
     needPasswordChange: userData.needPasswordChange,

@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import config from '../../../config';
 import ApiError from '../../errors/APIError';
 import httpStatus from 'http-status';
+import { Secret } from 'jsonwebtoken';
 
 const loginUser = async (payload: { email: string; password: string }) => {
     const userData = await prisma.user.findUniqueOrThrow({
@@ -86,7 +87,7 @@ const changePassword = async (user: any, payload: any) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
             email: user.email,
-            status: UserStatus.ACTIVE,
+            status: UserStatus.ACTIVE
         }
     });
 
@@ -98,26 +99,44 @@ const changePassword = async (user: any, payload: any) => {
     if (!isCorrectPassword) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'Password in incorrect');
     }
-   
-    const hashPassword: string = await bcrypt.hash(payload.newPassword, 12)
+
+    const hashPassword: string = await bcrypt.hash(payload.newPassword, 12);
 
     await prisma.user.update({
-        where:{
+        where: {
             email: userData.email
         },
         data: {
             password: hashPassword,
             needPasswordChange: false
         }
-    })
+    });
 
     return {
-        message: "password changed successfully"
-    }
+        message: 'password changed successfully'
+    };
+};
+
+const forgotPassword = async (payload: { email: string }) => {
+    const userData = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: payload.email,
+            status: UserStatus.ACTIVE
+        }
+    });
+
+    const resetPasswordToken = jwtHelpers.generateToken(
+        { email: userData.email, role: userData.role },
+        config.jwt.reset_password_token as Secret,
+        config.jwt.reset_password_token_expires_in // "5m"
+    );
+    console.log(133, resetPasswordToken);
+    
 };
 
 export const AuthService = {
     loginUser,
     refreshToken,
-    changePassword
+    changePassword,
+    forgotPassword
 };

@@ -3,6 +3,8 @@ import { jwtHelpers, TPayloadToken } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
 import * as bcrypt from 'bcrypt';
 import config from '../../../config';
+import ApiError from '../../errors/APIError';
+import httpStatus from 'http-status';
 
 const loginUser = async (payload: { email: string; password: string }) => {
     const userData = await prisma.user.findUniqueOrThrow({
@@ -18,7 +20,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
     );
 
     if (!isCorrectPassword) {
-        throw new Error('Password in incorrect');
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Password in incorrect');
     }
 
     const data: TPayloadToken = {
@@ -53,7 +55,7 @@ const refreshToken = async (token: string) => {
             config.jwt.refresh_token_secret as string
         ); // refreshToken secret
     } catch (err) {
-        throw new Error('You are not authorized!');
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
 
     const userData = await prisma.user.findUniqueOrThrow({
@@ -79,7 +81,43 @@ const refreshToken = async (token: string) => {
         accessToken
     };
 };
+
+const changePassword = async (user: any, payload: any) => {
+    const userData = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: user.email,
+            status: UserStatus.ACTIVE,
+        }
+    });
+
+    const isCorrectPassword = await bcrypt.compare(
+        payload.oldPassword,
+        userData.password
+    );
+
+    if (!isCorrectPassword) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Password in incorrect');
+    }
+   
+    const hashPassword: string = await bcrypt.hash(payload.newPassword, 12)
+
+    await prisma.user.update({
+        where:{
+            email: userData.email
+        },
+        data: {
+            password: hashPassword,
+            needPasswordChange: false
+        }
+    })
+
+    return {
+        message: "password changed successfully"
+    }
+};
+
 export const AuthService = {
     loginUser,
-    refreshToken
+    refreshToken,
+    changePassword
 };

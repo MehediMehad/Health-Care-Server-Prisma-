@@ -1,4 +1,4 @@
-import { Request, RequestHandler, Response } from 'express';
+import { Request, Response } from 'express';
 import { catchAsync } from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import httpsCode from 'http-status';
@@ -31,16 +31,27 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
         statusCode: httpsCode.OK,
         success: true,
-        message: 'Logged successfully',
+        message: 'Access token generated successfully',
         data: result
-        // data: {
-        //     accessTokens: result.accessTokens,
-        //     needPasswordChange: result.needPasswordChange
-        // }
+    });
+});
+
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+    const user = req.user; 
+    const body = req.body
+
+    const result = await AuthService.changePassword(user, body);
+
+    sendResponse(res, {
+        statusCode: httpsCode.OK,
+        success: true,
+        message: 'password changed successfully',
+        data: result
     });
 });
 
 export const AuthController = {
     loginUser,
-    refreshToken
+    refreshToken,
+    changePassword
 };

@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import { AdminController } from './admin.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { adminValidationSchema } from './admin.validation';

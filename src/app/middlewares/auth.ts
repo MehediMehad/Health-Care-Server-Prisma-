@@ -4,8 +4,9 @@ import config from '../../config';
 import { Secret } from 'jsonwebtoken';
 import ApiError from '../errors/APIError';
 import httpStatus from 'http-status';
+import { UserRole } from '@prisma/client';
 
-const auth = (...roles: string[]) => {
+const auth = (...roles: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             const token = req.headers.authorization;

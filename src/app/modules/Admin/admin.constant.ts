@@ -1,3 +1,8 @@
-export const adminFilterPikedFields = ['name', 'email', 'searchTerm', 'contactNumber']
+export const adminFilterPikedFields = [
+    'name',
+    'email',
+    'searchTerm',
+    'contactNumber'
+];
 
-export const adminSearchAbleFields = ['name', 'email']
+export const adminSearchAbleFields = ['name', 'email'];

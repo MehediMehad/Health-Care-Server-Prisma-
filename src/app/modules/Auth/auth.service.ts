@@ -6,6 +6,8 @@ import config from '../../../config';
 import ApiError from '../../errors/APIError';
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
+import emailSender from './emailSender';
+import resetEmailTemplate from '../../utils/EmailTemplate/resetEmail';
 
 const loginUser = async (payload: { email: string; password: string }) => {
     const userData = await prisma.user.findUniqueOrThrow({
@@ -127,11 +129,22 @@ const forgotPassword = async (payload: { email: string }) => {
 
     const resetPasswordToken = jwtHelpers.generateToken(
         { email: userData.email, role: userData.role },
-        config.jwt.reset_password_token as Secret,
-        config.jwt.reset_password_token_expires_in // "5m"
+        config.reset_password.token as Secret,
+        config.reset_password.expires_in // "5m"
     );
-    console.log(133, resetPasswordToken);
-    
+
+    const resetPasswordLink =
+        config.reset_password.link +
+        `?userId=${userData.id}&token=${resetPasswordToken}}`;
+
+    await emailSender(
+        userData.email,
+        resetEmailTemplate(resetPasswordLink)
+    );
+
+    console.log(133, resetPasswordLink);
+
+    // http://localhost:3000/reset-pass?email=mehedi3@gmail.com&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ
 };
 
 export const AuthService = {

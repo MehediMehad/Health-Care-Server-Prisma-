@@ -12,7 +12,7 @@ export default {
         refresh_token_expires_in: process.env.REFRESH_TOKEN_EXPIRES_IN // "30d"
     },
     reset_password: {
-        token: process.env.RESET_PASSWORD_TOKEN,
+        secret_token: process.env.RESET_PASSWORD_TOKEN,
         expires_in: process.env.RESET_PASSWORD_TOKEN_EXPIRES_IN as string, // "5m"
         link: process.env.RESET_PASSWORD_LINK // "http://localhost:3000/reset-pass"
     },

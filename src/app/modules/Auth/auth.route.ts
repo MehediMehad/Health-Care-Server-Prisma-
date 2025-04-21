@@ -14,8 +14,12 @@ router.post(
 
 router.post(
     '/forgot-password',
-    auth('ADMIN', 'DOCTOR', 'PATIENT', 'SUPPER_ADMIN'),
     AuthController.forgotPassword
+);
+
+router.post(
+    '/reset-password',
+    AuthController.resetPassword
 );
 
 export const AuthRouter = router;

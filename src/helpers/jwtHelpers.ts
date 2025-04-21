@@ -12,9 +12,8 @@ const generateToken = (
 ) => {
     const options: SignOptions = {
         algorithm: 'HS256',
-        expiresIn: expiresIn as SignOptions['expiresIn']
-    };
-
+        expiresIn
+    } as jwt.SignOptions;
     const tokens = jwt.sign(payload, secret, options);
     return tokens;
 };

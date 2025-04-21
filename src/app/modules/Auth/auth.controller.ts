@@ -37,8 +37,8 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 });
 
 const changePassword = catchAsync(async (req: Request, res: Response) => {
-    const user = req.user; 
-    const body = req.body
+    const user = req.user;
+    const body = req.body;
 
     const result = await AuthService.changePassword(user, body);
 
@@ -51,14 +51,25 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
 });
 
 const forgotPassword = catchAsync(async (req: Request, res: Response) => {
-
-    const result = await AuthService.forgotPassword( req.body);
+    await AuthService.forgotPassword(req.body);
 
     sendResponse(res, {
         statusCode: httpsCode.OK,
         success: true,
-        message: 'password changed successfully',
-        data: result
+        message: 'Check your email!',
+        data: null
+    });
+});
+
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+    const token = req.headers.authorization || '';
+    await AuthService.resetPassword(token, req.body);
+
+    sendResponse(res, {
+        statusCode: httpsCode.OK,
+        success: true,
+        message: 'Password Reset!',
+        data: null
     });
 });
 
@@ -66,5 +77,6 @@ export const AuthController = {
     loginUser,
     refreshToken,
     changePassword,
-    forgotPassword
+    forgotPassword,
+    resetPassword
 };

@@ -7,7 +7,7 @@ import ApiError from '../../errors/APIError';
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import emailSender from './emailSender';
-import resetEmailTemplate from '../../utils/EmailTemplate/resetEmail';
+import resetEmailTemplate from '../../../helpers/emailTemplateHelpers';
 
 const loginUser = async (payload: { email: string; password: string }) => {
     const userData = await prisma.user.findUniqueOrThrow({

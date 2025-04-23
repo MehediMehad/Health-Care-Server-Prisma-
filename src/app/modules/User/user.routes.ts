@@ -4,6 +4,7 @@ import auth from '../../middlewares/auth';
 import { fileUploader } from '../../../helpers/fileUploader';
 import { UserValidation } from './user.validation';
 import { USER_ROLE } from './user.constant';
+import { validateRequest } from '../../middlewares/validateRequest';
 
 const router = express.Router();
 
@@ -41,6 +42,15 @@ router.post(
         return UserController.createPatient(req, res, next)
     }
 );
+
+router.patch(
+    '/:id/status',
+    auth(USER_ROLE.SUPPER_ADMIN, USER_ROLE.ADMIN),
+    validateRequest(UserValidation.updateStatus),
+    UserController.changeProfileStatus
+)
+
+
 
 export const UserRoutes = router;
 

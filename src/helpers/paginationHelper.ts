@@ -1,11 +1,12 @@
-export type TOptions = {
-    page?: number;
-    limit?: number;
-    sortBy: string;
-    sortOrder?: string;
-};
+type IOptions = {
+    page?: number,
+    limit?: number,
+    sortOrder?: string,
+    sortBy?: string
+}
 
-type TOptionsResults = {
+
+type IOptionsResults = {
     page: number;
     limit: number;
     skip: number;
@@ -13,7 +14,7 @@ type TOptionsResults = {
     sortOrder: string;
 };
 
-const calculatePagination = (options: TOptions): TOptionsResults => {
+const calculatePagination = (options: IOptions): IOptionsResults => {
     const page: number = Number(options.page) || 1;
     const limit: number = Number(options.limit) || 10;
     const skip: number = (Number(page) - 1) * limit;

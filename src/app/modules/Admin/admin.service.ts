@@ -3,8 +3,9 @@ import { Admin, Prisma } from '@prisma/client';
 import { adminSearchAbleFields } from './admin.constant';
 import { paginationHelper } from '../../../helpers/paginationHelper';
 import { TAdminFilterRequest } from './admin.interface';
+import { IPaginationOptions } from '../../interface/pagination';
 
-const getAllFromDB = async (params: TAdminFilterRequest, options: any) => {
+const getAllFromDB = async (params: TAdminFilterRequest, options: IPaginationOptions) => {
     console.log(25, options);
     const { page, limit, skip, sortBy, sortOrder } =
         paginationHelper.calculatePagination(options);

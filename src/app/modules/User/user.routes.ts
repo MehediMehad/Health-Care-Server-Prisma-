@@ -3,12 +3,19 @@ import { UserController } from './user.controller';
 import auth from '../../middlewares/auth';
 import { fileUploader } from '../../../helpers/fileUploader';
 import { UserValidation } from './user.validation';
+import { USER_ROLE } from './user.constant';
 
 const router = express.Router();
 
+router.get(
+    '/',
+    auth(USER_ROLE.SUPPER_ADMIN, USER_ROLE.ADMIN),
+    UserController.getAllFromDB
+);
+
 router.post(
     '/create-admin',
-    auth('ADMIN', 'SUPPER_ADMIN'),
+    auth(USER_ROLE.SUPPER_ADMIN, USER_ROLE.ADMIN),
     fileUploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = UserValidation.createAdmin.parse(JSON.parse(req.body.data));
@@ -18,7 +25,7 @@ router.post(
 
 router.post(
     '/create-doctor',
-    auth('ADMIN', 'SUPPER_ADMIN'),
+    auth(USER_ROLE.SUPPER_ADMIN, USER_ROLE.ADMIN),
     fileUploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = UserValidation.createDoctor.parse(JSON.parse(req.body.data));

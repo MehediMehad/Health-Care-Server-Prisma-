@@ -1,11 +1,12 @@
 import prisma from '../../../shared/prisma';
-import { Patient, UserRole } from '@prisma/client';
+import { Admin, Doctor, Patient, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { fileUploader } from '../../../helpers/fileUploader';
 import { IFile } from '../../interface/file';
+import { Request } from 'express';
 
-const createAdmin = async (req: any) => {
-    const file = req.file;
+const createAdmin = async (req: Request): Promise<Admin>  => {
+    const file = req.file as IFile;
 
     if (file) {
         const fileUploadToCloudinary =
@@ -38,8 +39,8 @@ const createAdmin = async (req: any) => {
     return result;
 };
 
-const createDoctor = async (req: any) => {
-    const file = req.file;
+const createDoctor = async (req: Request): Promise<Doctor>  => {
+    const file = req.file as IFile;
 
     if (file) {
         const fileUploadToCloudinary =
@@ -50,7 +51,6 @@ const createDoctor = async (req: any) => {
     }
 
     const hashPassword: string = await bcrypt.hash(req.body.password, 12);
-    console.log("req-body", req.body);
     
     const userData = {
         email: req.body.doctor.email,
@@ -73,7 +73,7 @@ const createDoctor = async (req: any) => {
     return result;
 };
 
-const createPatient = async (req: any): Promise<Patient> => {
+const createPatient = async (req: Request): Promise<Patient> => {
     const file = req.file as IFile;
 
     if (file) {
@@ -107,5 +107,4 @@ export const UserService = {
     createAdmin,
     createDoctor,
     createPatient,
-    
 };

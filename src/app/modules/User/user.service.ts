@@ -8,14 +8,14 @@ import { IPaginationOptions } from '../../interface/pagination';
 import { paginationHelper } from '../../../helpers/paginationHelper';
 import { userSearchAbleFields } from './user.constant';
 
-const createAdmin = async (req: Request): Promise<Admin>  => {
+const createAdmin = async (req: Request): Promise<Admin> => {
     const file = req.file as IFile;
 
     if (file) {
         const fileUploadToCloudinary =
             await fileUploader.uploadToCloudinary(file);
-            console.log(fileUploadToCloudinary);    
-            
+        console.log(fileUploadToCloudinary);
+
         req.body.admin.profilePhoto = fileUploadToCloudinary?.secure_url;
     }
 
@@ -42,19 +42,19 @@ const createAdmin = async (req: Request): Promise<Admin>  => {
     return result;
 };
 
-const createDoctor = async (req: Request): Promise<Doctor>  => {
+const createDoctor = async (req: Request): Promise<Doctor> => {
     const file = req.file as IFile;
 
     if (file) {
         const fileUploadToCloudinary =
             await fileUploader.uploadToCloudinary(file);
-            console.log(fileUploadToCloudinary);    
-            
+        console.log(fileUploadToCloudinary);
+
         req.body.doctor.profilePhoto = fileUploadToCloudinary?.secure_url;
     }
 
     const hashPassword: string = await bcrypt.hash(req.body.password, 12);
-    
+
     const userData = {
         email: req.body.doctor.email,
         password: hashPassword,
@@ -80,17 +80,18 @@ const createPatient = async (req: Request): Promise<Patient> => {
     const file = req.file as IFile;
 
     if (file) {
-        const uploadedProfileImage = await fileUploader.uploadToCloudinary(file);
+        const uploadedProfileImage =
+            await fileUploader.uploadToCloudinary(file);
         req.body.patient.profilePhoto = uploadedProfileImage?.secure_url;
     }
 
-    const hashedPassword: string = await bcrypt.hash(req.body.password, 12)
+    const hashedPassword: string = await bcrypt.hash(req.body.password, 12);
 
     const userData = {
         email: req.body.patient.email,
         password: hashedPassword,
         role: UserRole.PATIENT
-    }
+    };
 
     const result = await prisma.$transaction(async (transactionClient) => {
         await transactionClient.user.create({
@@ -113,7 +114,6 @@ const getAllFromDB = async (params: any, options: IPaginationOptions) => {
         paginationHelper.calculatePagination(options);
     const { searchTerm, ...filterData } = params;
     const andCondition: Prisma.UserWhereInput[] = [];
-    
 
     if (params.searchTerm) {
         andCondition.push({
@@ -129,7 +129,7 @@ const getAllFromDB = async (params: any, options: IPaginationOptions) => {
         andCondition.push({
             AND: Object.keys(filterData).map((key) => ({
                 [key]: {
-                    equals: (filterData as any)[key],
+                    equals: (filterData as any)[key]
                     // mode: 'insensitive'    // insensitive you can not use equals only use contains
                 }
             }))
@@ -137,9 +137,9 @@ const getAllFromDB = async (params: any, options: IPaginationOptions) => {
     }
 
     console.dir(andCondition, { depth: null });
-    
-    
-    const whereCondition: Prisma.UserWhereInput = andCondition.length > 0 ? { AND: andCondition } : {};
+
+    const whereCondition: Prisma.UserWhereInput =
+        andCondition.length > 0 ? { AND: andCondition } : {};
 
     const result = await prisma.user.findMany({
         where: whereCondition,
@@ -152,7 +152,24 @@ const getAllFromDB = async (params: any, options: IPaginationOptions) => {
                   }
                 : {
                       createdAt: 'desc'
-                  }
+                  },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            needPasswordChange: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+            admin: true,
+            patient: true,
+            doctor: true
+        }
+        // include: {
+        //     admin: true,
+        //     patient: true,
+        //     doctor: true
+        // }
     });
 
     const total = await prisma.user.count({

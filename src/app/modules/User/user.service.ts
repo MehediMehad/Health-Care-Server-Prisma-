@@ -113,13 +113,14 @@ const getAllFromDB = async (params: any, options: IPaginationOptions) => {
         paginationHelper.calculatePagination(options);
     const { searchTerm, ...filterData } = params;
     const andCondition: Prisma.UserWhereInput[] = [];
+    
 
     if (params.searchTerm) {
         andCondition.push({
             OR: userSearchAbleFields.map((field) => ({
                 [field]: {
                     contains: params.searchTerm,
-                    mode: 'insensitive'
+                    mode: 'insensitive' // search case insensitive
                 }
             }))
         });
@@ -129,12 +130,15 @@ const getAllFromDB = async (params: any, options: IPaginationOptions) => {
             AND: Object.keys(filterData).map((key) => ({
                 [key]: {
                     equals: (filterData as any)[key],
-                    mode: 'insensitive'
+                    // mode: 'insensitive'    // insensitive you can not use equals only use contains
                 }
             }))
         });
     }
 
+    console.dir(andCondition, { depth: null });
+    
+    
     const whereCondition: Prisma.UserWhereInput = andCondition.length > 0 ? { AND: andCondition } : {};
 
     const result = await prisma.user.findMany({

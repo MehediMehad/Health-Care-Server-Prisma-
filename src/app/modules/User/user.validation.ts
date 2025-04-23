@@ -30,7 +30,7 @@ const createDoctor = z.object({
         }),
         address: z.string().optional(),
         registrationNumber: z.string({
-            required_error: 'Reg number is required'
+            required_error: 'Registration number is required'
         }),
         experience: z.number().optional(),
         gender: z.nativeEnum(Gender).refine(
@@ -42,7 +42,7 @@ const createDoctor = z.object({
             })
         ),
         appointmentFee: z.number({
-            required_error: 'appointmentfee is required'
+            required_error: 'appointmentFee is required'
         }),
         qualification: z.string({
             required_error: 'qualification is required'

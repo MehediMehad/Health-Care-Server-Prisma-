@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import { catchAsync } from '../../../shared/catchAsync';
 import { userFilterableFields } from './user.constant';
 import pick from '../../../shared/pick';
+import { IAuthUser } from '../../interface/common';
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {    
     const result = await UserService.createAdmin(req);
@@ -67,10 +68,25 @@ const changeProfileStatus = catchAsync(async (req: Request, res: Response) => {
     })
 });
 
+const getMyProfile = catchAsync(async (req: Request & { user?: IAuthUser}, res: Response) => {
+
+    const user = req.user;
+
+    const result = await UserService.getMyProfile(user as IAuthUser);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "My profile data fetched!",
+        data: result
+    })
+});
+
 export const UserController = {
     createAdmin,
     createDoctor,
     createPatient,
     getAllFromDB,
-    changeProfileStatus
+    changeProfileStatus,
+    getMyProfile
 };

@@ -50,7 +50,11 @@ router.patch(
     UserController.changeProfileStatus
 )
 
-
+router.get(
+    '/me',
+    auth(USER_ROLE.SUPPER_ADMIN, USER_ROLE.ADMIN, USER_ROLE.DOCTOR, USER_ROLE.PATIENT),
+    UserController.getMyProfile
+)
 
 export const UserRoutes = router;
 

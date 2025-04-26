@@ -58,7 +58,8 @@ model Doctor {
   updatedAt           DateTime @updatedAt
 
   // Relation
-  user User @relation(fields: [email], references: [email]) // one to one relation to the doctor
+  user              User                @relation(fields: [email], references: [email]) // one to one relation to the doctor
+  doctorSpecialties DoctorSpecialties[]
 
   @@map("doctors")
 }
@@ -77,6 +78,26 @@ model Patient {
   user User @relation(references: [email], fields: [email]) // one to one relation to the user
 
   @@map("patients")
+}
+
+model Specialties {
+  id                String              @id @default(uuid())
+  title             String
+  icon              String
+  doctorSpecialties DoctorSpecialties[]
+
+  @@map("specialties")
+}
+
+model DoctorSpecialties {
+  specialtiesId String
+  specialties   Specialties @relation(fields: [specialtiesId], references: [id])
+
+  doctorId String
+  doctor   Doctor @relation(fields: [doctorId], references: [id])
+
+  @@id([specialtiesId, doctorId])
+  @@map("doctor_specialties")
 }
 
 enum UserRole {

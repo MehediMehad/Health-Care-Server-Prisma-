@@ -1,18 +1,25 @@
 import { Gender, UserStatus } from '@prisma/client';
 import { z } from 'zod';
 
-const createAdmin = z.object({
+const registration = z.object({
     password: z.string({ required_error: 'password is required' }),
-    admin: z.object({
-        name: z.string({ required_error: 'name is required' }),
-        email: z
-            .string({ required_error: 'email is required' })
-            .email({ message: 'provide a valid email' }),
-        contactNumber: z.string({
-            required_error: 'contact Number is required'
-        })
-    })
-});
+    user: z.object({
+      name: z.string({ required_error: 'name is required' }),
+      email: z
+        .string({ required_error: 'email is required' })
+        .email({ message: 'provide a valid email' }),
+      contactNumber: z
+        .string({ required_error: 'contact number is required' })
+        .regex(/^\d+$/, { message: 'Contact number must be a number' })
+        .min(10, { message: 'Contact number must be at least 10 digits' })
+        .max(15, { message: 'Contact number must be at most 15 digits' }),
+      gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
+        required_error: 'gender is required',
+        invalid_type_error: 'gender must be MALE, FEMALE, or OTHER',
+      }),
+      profilePhoto: z.string().optional(),
+    }),
+  });
 
 const createDoctor = z.object({
     password: z.string({
@@ -90,7 +97,7 @@ const updateStatus = z.object({
 });
 
 export const UserValidation = {
-    createAdmin,
+    registration,
     createDoctor,
     createPatient,
     updateStatus

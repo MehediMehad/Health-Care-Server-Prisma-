@@ -15,11 +15,11 @@ touch src/app/modules/Auth/auth.route.ts
 
 
 
-touch auth.interface.ts
-touch auth.validation.ts
-touch auth.service.ts
-touch auth.controller.ts
-touch auth.route.ts
+touch specialties.interface.ts
+touch specialties.validation.ts
+touch specialties.service.ts
+touch specialties.controller.ts
+touch specialties.route.ts
 
 
 

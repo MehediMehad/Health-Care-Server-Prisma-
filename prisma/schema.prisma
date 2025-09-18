@@ -9,102 +9,29 @@ datasource db {
 
 model User {
   id                 String     @id @default(uuid())
+  name               String
+  profilePhoto       String?
+  contactNumber      String
   email              String     @unique
   password           String
   role               UserRole
+  gender             Gender
   needPasswordChange Boolean    @default(true)
+  isDeleted     Boolean  @default(false)
   status             UserStatus @default(ACTIVE)
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
-  admin              Admin? // One to one relation to the admin
-  doctor             Doctor? // One to one relation to the doctor
-  patient            Patient? // One to one relation to the patient
 
   @@map("users")
 }
 
-model Admin {
-  id            String   @id @default(uuid())
-  name          String
-  email         String   @unique
-  profilePhoto  String?
-  contactNumber String
-  isDeleted     Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 
-  // Relation
-  user User @relation(fields: [email], references: [email]) // one to one relation to the admin
 
-  @@map("admins")
-}
 
-model Doctor {
-  id                  String   @id @default(uuid())
-  name                String
-  email               String   @unique
-  profilePhoto        String?
-  contactNumber       String
-  address             String
-  registrationNumber  String
-  experience          Int      @default(0)
-  gender              Gender
-  appointmentFee      Int
-  qualification       String
-  currentWorkingPlace String
-  designation         String
-  createdAt           DateTime @default(now())
-  isDeleted           Boolean  @default(false)
-  updatedAt           DateTime @updatedAt
-
-  // Relation
-  user              User                @relation(fields: [email], references: [email]) // one to one relation to the doctor
-  doctorSpecialties DoctorSpecialties[]
-
-  @@map("doctors")
-}
-
-model Patient {
-  id            String   @id @unique @default(uuid())
-  email         String   @unique
-  name          String
-  profilePhoto  String?
-  contactNumber String?
-  address       String?
-  isDeleted     Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  user User @relation(references: [email], fields: [email]) // one to one relation to the user
-
-  @@map("patients")
-}
-
-model Specialties {
-  id                String              @id @default(uuid())
-  title             String
-  icon              String
-  doctorSpecialties DoctorSpecialties[]
-
-  @@map("specialties")
-}
-
-model DoctorSpecialties {
-  specialtiesId String
-  specialties   Specialties @relation(fields: [specialtiesId], references: [id])
-
-  doctorId String
-  doctor   Doctor @relation(fields: [doctorId], references: [id])
-
-  @@id([specialtiesId, doctorId])
-  @@map("doctor_specialties")
-}
 
 enum UserRole {
-  SUPPER_ADMIN
   ADMIN
-  DOCTOR
-  PATIENT
+  USER
 }
 
 enum UserStatus {
